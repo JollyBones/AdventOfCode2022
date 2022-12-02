@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 fs.readFile('./inputs/day-1/input.dat', 'utf-8', (err, data) => {
 	let topCount = 0;

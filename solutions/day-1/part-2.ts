@@ -1,7 +1,7 @@
-const fs = require('fs');
+import fs from 'fs';
 
 fs.readFile('./inputs/day-1/input.dat', 'utf-8', (err, data) => {
-	let topCounts = [];
+	let topCounts: number[] = [];
 	let currCount = 0;
 
 	if (err) {
@@ -24,5 +24,5 @@ fs.readFile('./inputs/day-1/input.dat', 'utf-8', (err, data) => {
 	});
 
 	console.log(topCounts);
-	console.log(topCounts.reduce((a, b) => a + b))
+	console.log(topCounts.reduce((a, b) => a + b));
 });
