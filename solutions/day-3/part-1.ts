@@ -3,7 +3,7 @@ import fs from 'fs';
 // a = 1, b = ....
 // A = 27, B = ....
 
-const getPriority = (item: string): number => {
+export const getPriority = (item: string): number => {
 	if (item.length > 1) {
 		throw Error("Cannot get priority of more than one character");
 	}
