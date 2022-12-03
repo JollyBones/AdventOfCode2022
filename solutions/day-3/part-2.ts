@@ -13,12 +13,10 @@ fs.readFile('./inputs/day-3/input.dat', 'utf-8', (err, data) => {
 			new Set(groupSacks[2].split(""))
 		];
 
-		one.forEach((item) => {
-			if (two.has(item) && three.has(item)) {
-				console.log(`${index}: Found common item ${item}`);
-				priorities += getPriority(item);
-			}
-		});
+		const commonItem = [ ...one].find(item => two.has(item) && three.has(item));
+		console.log(`${index}: Found common item ${commonItem}`);
+		priorities += getPriority(commonItem!);
+
 		// Increase index
 		index += 3;
 	};
