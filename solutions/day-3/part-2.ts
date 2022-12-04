@@ -1,7 +1,7 @@
-import fs from 'fs';
-import { getPriority } from './part-1';
+import { readInFile } from '../filereader'
+import { getPriority } from './utils';
 
-fs.readFile('./inputs/day-3/input.dat', 'utf-8', (err, data) => {
+readInFile('./inputs/day-3/input.dat', (data) => {
 	let priorities = 0;
 	const rucksacks = data.split("\n");
 	let index = 0;
