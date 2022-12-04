@@ -1,12 +1,9 @@
-import fs from 'fs';
+import { readInFile } from "../filereader";
 
-fs.readFile('./inputs/day-1/input.dat', 'utf-8', (err, data) => {
+readInFile('./inputs/day-1/input.dat', (data) => {
 	let topCount = 0;
 	let currCount = 0;
-	if (err) {
-		console.error(err);
-		return;
-	}
+	
 	const values = data.split("\n");
 
 	values.forEach(value => {

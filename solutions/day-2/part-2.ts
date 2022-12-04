@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { readInFile } from "../filereader";
 // Rock     = A
 // Paper    = B
 // Scissors = C
@@ -31,7 +31,7 @@ const results: Results = {
 	}
 };
 
-fs.readFile('./inputs/day-2/input.dat', 'utf-8', (err, data) => {
+readInFile('./inputs/day-2/input.dat', (data) => {
 	let score = 0;
 	const rows = data.toUpperCase().split("\n");
 
