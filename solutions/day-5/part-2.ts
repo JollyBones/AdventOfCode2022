@@ -29,10 +29,10 @@ readInFile('./inputs/day-5/input.dat', (data) => {
 		stacks.set(from, fromStack.slice(0, -amount));
 
 		const toStack = stacks.get(to)!;
-		while (crates.length > 0) {
-			toStack.push(crates.pop()!);
-		}
-		stacks.set(to, toStack);
+		stacks.set(to, [
+			...toStack,
+			...crates
+		]);
 	});
 	const keys = [...stacks.keys()].sort();
 	const topItems = keys.map(key => stacks.get(key)?.pop());
