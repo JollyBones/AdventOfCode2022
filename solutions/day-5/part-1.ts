@@ -9,7 +9,7 @@ readInFile('./inputs/day-5/input.dat', (data) => {
 	]
 	
 	setup.forEach(row => {
-		const elements = row.split("").forEach((element, index) => {
+		row.split("").forEach((element, index) => {
 			// Find element we care about
 			if (element.length > 0 && element !== '[' && element !== ']' && element !== ' ') {
 				const relIndex = ((index - 1) / 4) + 1;
