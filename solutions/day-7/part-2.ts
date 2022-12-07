@@ -1,3 +1,4 @@
+import { stringify } from 'querystring';
 import { readInFile } from '../filereader';
 
 type File = {
@@ -7,7 +8,8 @@ type File = {
 
 type DirectorySizes = {
 	name: string,
-	size: number
+	size: number,
+	subDir: DirectorySizes[]
 }
 class Directory {
 	name: string;
@@ -82,21 +84,29 @@ const processCommands = (dir: Directory, trace: string[], index: number): number
 
 const getDirectorySizes = (dir: Directory): DirectorySizes[] =>  {
 	const fileSize = dir.getFiles().map(file => file.size).reduce((a, b) => a + b, 0);
-	const subDirs = dir.getDirectories().map(dir => ({
-		name: dir.name,
-		size: getDirectorySizes(dir).reduce((a, b) => a + b.size, 0),
-	}));
-	const dirSize = subDirs.reduce((a, b) => a + b.size, 0);
+	const subDirectories = dir.getDirectories()
+	let temp: DirectorySizes[] = [];
+	subDirectories.forEach(sd => {
+		temp.push(...getDirectorySizes(sd));
+	});
+	const subDirectorySize = temp.reduce((a, b) => a + b.size, 0);
+	const dirSize = fileSize + subDirectorySize;
 	return [
 		{
 			name: dir.name,
-			size: fileSize + dirSize,
+			size: dirSize,
+			subDir: temp,
 		},
-		...subDirs,
 	];
 }
 
+const pushToMap = (map: Map<String, number>, dir: DirectorySizes) => {
+	map.set(dir.name, dir.size);
+	dir.subDir.forEach(subDir => pushToMap(map, subDir));
+};
+
 readInFile('./inputs/day-7/input.dat', (data) => {
+	const sizeMap = new Map<String, number>();
 	const trace = data.split('\n');
 
 	// First command is always create a root dir. Start from there.
@@ -107,8 +117,10 @@ readInFile('./inputs/day-7/input.dat', (data) => {
 	processCommands(rootDir, trace, index);
 
 	// Get sizes
-	const directories = getDirectorySizes(rootDir).sort((a, b) => b.size - a.size);
-	const totalSize = directories[0].size;
-	console.log(rootDir.getDirectories().map(getDirectorySizes));
-	console.log(directories.findIndex(d => 70000000 - totalSize + d.size >= 30000000));
+	const directories = getDirectorySizes(rootDir);
+	pushToMap(sizeMap, directories[0]);
+	const usedSpace = sizeMap.get('/')!;
+	const sorted = Array.from(sizeMap.entries()).sort(([a, b], [c, d]) => b - d);
+	const target = sorted.find(([name, size]) => (70_000_000 - usedSpace + size) >= 30_000_000);
+	console.log(target);
 });
