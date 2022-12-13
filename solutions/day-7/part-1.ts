@@ -68,7 +68,7 @@ const addFilesToDirectory = (
 const processCommands = (
 	dir: Directory,
 	trace: string[],
-	index: number,
+	index = 1,
 ): number => {
 	let shouldProcess = true;
 	while (shouldProcess && index < trace.length) {
@@ -76,7 +76,7 @@ const processCommands = (
 		if (line === '$ ls') {
 			index = addFilesToDirectory(dir, trace, index + 1);
 		} else {
-			const [_, command, target] = line.split(' ');
+			const [_, _command, target] = line.split(' ');
 			if (target === '..') {
 				shouldProcess = false;
 				index++;
@@ -115,10 +115,9 @@ readInFile('./inputs/day-7/input.dat', (data) => {
 
 	// First command is always create a root dir. Start from there.
 	const rootDir = new Directory('/');
-	let index = 1;
 
 	// Process commands
-	processCommands(rootDir, trace, index);
+	processCommands(rootDir, trace);
 
 	// Get sizes
 	const directories = getDirectorySizes(rootDir);

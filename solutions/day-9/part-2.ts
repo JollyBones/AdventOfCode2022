@@ -15,13 +15,13 @@ type Point = {
 readInFile('./inputs/day-9/input.dat', (data) => {
 	const orders = data.split('\n');
 	// There are negative moves
-	let tailPoints: Map<number, Map<number, string>> = new Map();
+	const tailPoints: Map<number, Map<number, string>> = new Map();
 	const moves: Move[] = [];
 
 	const getDistance = (a: number, b: number) => Math.abs(a - b);
 
 	const addTailMark = (x: number, y: number) => {
-		let column = tailPoints.get(y) ?? new Map();
+		const column = tailPoints.get(y) ?? new Map();
 		column.set(x, '#');
 		tailPoints.set(y, column);
 	};
@@ -36,9 +36,9 @@ readInFile('./inputs/day-9/input.dat', (data) => {
 		});
 	});
 
-	let rope: Point[] = Array(10).fill({ x: 0, y: 0 });
+	const rope: Point[] = Array(10).fill({ x: 0, y: 0 });
 
-	moves.forEach((move, moveIndex) => {
+	moves.forEach(move => {
 		const modifier = ['L', 'D'].includes(move.direction) ? -1 : 1;
 		switch (move.direction) {
 			case 'U':

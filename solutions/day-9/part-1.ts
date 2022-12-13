@@ -10,14 +10,14 @@ type Move = {
 readInFile('./inputs/day-9/input.dat', (data) => {
 	const orders = data.split('\n');
 	// There are negative moves
-	let tailPoints: Map<number, Map<number, string>> = new Map();
+	const tailPoints: Map<number, Map<number, string>> = new Map();
 	const moves: Move[] = [];
 	let maxXDistance = 0, minXDistance = 0, maxYDistance = 0, minYDistance = 0;
 
 	const getDistance = (a: number, b: number) => Math.abs(a - b);
 
 	const addTailMark = (x: number, y: number) => {
-		let column = tailPoints.get(y) ?? new Map();
+		const column = tailPoints.get(y) ?? new Map();
 		column.set(x, '#');
 		tailPoints.set(y, column);
 	};

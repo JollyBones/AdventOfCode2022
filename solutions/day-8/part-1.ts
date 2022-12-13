@@ -8,9 +8,6 @@ readInFile('./inputs/day-8/input.dat', (data) => {
 	const gridWidth = treeGrid[0].length;
 	const gridHeight = treeGrid.length;
 
-	const LEFT_EDGE = 0;
-	const RIGHT_EDGE = gridWidth - 1;
-
 	let visibleTrees = (2 * gridHeight + 2 * gridWidth) - 4;
 
 	const flattenedGrid = treeGrid.flatMap((tree) => tree);

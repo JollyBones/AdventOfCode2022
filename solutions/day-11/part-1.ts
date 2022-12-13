@@ -12,7 +12,7 @@ const reduceItemWorry = (item: number): number => Math.floor(item / 3);
 
 readInFile('./inputs/day-11/input.dat', (data) => {
 	const setup = data.split('\n\n');
-	let monkeys: Monkey[] = [];
+	const monkeys: Monkey[] = [];
 
 	// Setup monkeys
 	setup.forEach((entry) => {

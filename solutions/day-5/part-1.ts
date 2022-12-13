@@ -1,7 +1,7 @@
 import { readInFile } from '../filereader.ts';
 
 readInFile('./inputs/day-5/input.dat', (data) => {
-	const stacks = new Map<Number, string[]>();
+	const stacks = new Map<number, string[]>();
 	const rows = data.split('\n');
 	const [setup, commands] = [
 		rows.filter((row) => row.includes('[')),

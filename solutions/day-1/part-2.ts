@@ -1,7 +1,7 @@
 import { readInFile } from '../filereader.ts';
 
 readInFile('./inputs/day-1/input.dat', (data) => {
-	let topCounts: number[] = [];
+	const topCounts: number[] = [];
 	let currCount = 0;
 
 	const values = data.split('\n');
