@@ -1,10 +1,9 @@
-import fs from 'fs';
 
-export const readInFile = (fileName: string, callback: (data: string) => void) => {
-	fs.readFile(fileName, 'utf-8', (err, data) => {
-		if (err) {
-			throw Error(`Unable to read file ${fileName}: ${err}`);
-		}
-		callback(data);
-	})
+
+export const readInFile = async (fileName: string, callback: (data: string) => void) => {
+	const decoder = new TextDecoder("utf-8");
+	const file = await Deno.readFile(fileName)
+	const data = decoder.decode(file);
+
+	callback(data);
 };
