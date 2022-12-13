@@ -8,7 +8,7 @@ Each day at 1pm AWST (+8 UTC), the new challenge is unlocked and is made availab
 The overview of the program is detailed [here](https://adventofcode.com/2022/about).
 
 ## 2. How are you completing this?
-I'm using Typescript.
+I'm using Typescript and Deno.
 
 ## 3. How do I run one of your solutions
 Execute the following command from the root of the project:
