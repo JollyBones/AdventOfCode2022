@@ -1,4 +1,4 @@
-import { readInFile } from '../filereader';
+import { readInFile } from '../filereader.ts';
 
 readInFile('./inputs/day-5/input.dat', (data) => {
 	const stacks = new Map<Number, string[]>();

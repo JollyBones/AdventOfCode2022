@@ -1,4 +1,4 @@
-import { readInFile } from "../filereader";
+import { readInFile } from "../filereader.ts";
 
 readInFile('./inputs/day-4/input.dat', (data) => {
 	let fullOverlapCount = 0;

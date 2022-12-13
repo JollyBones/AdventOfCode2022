@@ -1,4 +1,4 @@
-import { readInFile } from '../filereader';
+import { readInFile } from '../filereader.ts';
 
 const WINDOW_SIZE = 4;
 

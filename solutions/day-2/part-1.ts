@@ -1,5 +1,5 @@
 
-import { readInFile } from "../filereader";
+import { readInFile } from "../filereader.ts";
 // Rock     = A, X
 // Paper    = B, Y
 // Scissors = C, Z

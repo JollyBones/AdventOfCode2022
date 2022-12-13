@@ -1,4 +1,4 @@
-import { readInFile } from '../filereader'
+import { readInFile } from '../filereader.ts'
 import { getPriority } from './utils';
 
 readInFile('./inputs/day-3/input.dat', (data) => {

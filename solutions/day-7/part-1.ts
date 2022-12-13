@@ -1,4 +1,4 @@
-import { readInFile } from '../filereader';
+import { readInFile } from '../filereader.ts';
 
 type File = {
 	name: string,

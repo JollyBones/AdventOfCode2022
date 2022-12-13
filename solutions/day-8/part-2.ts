@@ -1,4 +1,4 @@
-import { readInFile } from '../filereader';
+import { readInFile } from '../filereader.ts';
 
 readInFile('./inputs/day-8/input.dat', (data) => {
 	// Create grid

@@ -1,4 +1,4 @@
-import { readInFile } from "../filereader";
+import { readInFile } from "../filereader.ts";
 
 readInFile('./inputs/day-1/input.dat', (data) => {	
 	let topCounts: number[] = [];
