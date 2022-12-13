@@ -8,39 +8,39 @@ import { readInFile } from "../filereader.ts";
 // Win      = Z
 
 type Results = {
-	[key: string]: {
-		[subkey: string]: number
-	}
-}
-
-const results: Results = {
-	'A': {
-		'X': 3, // 3 + 0
-		'Y': 4, // 1 + 3
-		'Z': 8, // 2 + 6
-	},
-	'B': {
-		'X': 1, // 1 + 0
-		'Y': 5, // 2 + 3
-		'Z': 9, // 3 + 6
-	},
-	'C': {
-		'X': 2, // 2 + 0
-		'Y': 6, // 3 + 3
-		'Z': 7, // 1 + 6
-	}
+  [key: string]: {
+    [subkey: string]: number;
+  };
 };
 
-readInFile('./inputs/day-2/input.dat', (data) => {
-	let score = 0;
-	const rows = data.toUpperCase().split("\n");
+const results: Results = {
+  "A": {
+    "X": 3, // 3 + 0
+    "Y": 4, // 1 + 3
+    "Z": 8, // 2 + 6
+  },
+  "B": {
+    "X": 1, // 1 + 0
+    "Y": 5, // 2 + 3
+    "Z": 9, // 3 + 6
+  },
+  "C": {
+    "X": 2, // 2 + 0
+    "Y": 6, // 3 + 3
+    "Z": 7, // 1 + 6
+  },
+};
 
-	rows.forEach(row => {
-		const [ player1, player2 ] = row.split(" ");
-		const result = results[player1][player2];
-		console.log(player1, player2, result);
-		score += result
-	});
+readInFile("./inputs/day-2/input.dat", (data) => {
+  let score = 0;
+  const rows = data.toUpperCase().split("\n");
 
-	console.log(score);
-})
+  rows.forEach((row) => {
+    const [player1, player2] = row.split(" ");
+    const result = results[player1][player2];
+    console.log(player1, player2, result);
+    score += result;
+  });
+
+  console.log(score);
+});

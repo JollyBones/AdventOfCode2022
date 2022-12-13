@@ -1,21 +1,21 @@
 import { readInFile } from "../filereader.ts";
 
-readInFile('./inputs/day-1/input.dat', (data) => {
-	let topCount = 0;
-	let currCount = 0;
-	
-	const values = data.split("\n");
+readInFile("./inputs/day-1/input.dat", (data) => {
+  let topCount = 0;
+  let currCount = 0;
 
-	values.forEach(value => {
-		if (!value) {
-			if (currCount > topCount) {
-				topCount = currCount;
-			}
-			currCount = 0;
-		} else {
-			currCount += Number(value);
-		}
-	});
+  const values = data.split("\n");
 
-	console.log(topCount);
+  values.forEach((value) => {
+    if (!value) {
+      if (currCount > topCount) {
+        topCount = currCount;
+      }
+      currCount = 0;
+    } else {
+      currCount += Number(value);
+    }
+  });
+
+  console.log(topCount);
 });
