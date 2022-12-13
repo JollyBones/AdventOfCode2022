@@ -1,5 +1,5 @@
 import { readInFile } from '../filereader.ts'
-import { getPriority } from './utils';
+import { getPriority } from './utils.ts';
 
 readInFile('./inputs/day-3/input.dat', (data) => {
 	let priorities = 0;

@@ -1,4 +1,3 @@
-import { stringify } from 'querystring';
 import { readInFile } from '../filereader.ts';
 
 type File = {

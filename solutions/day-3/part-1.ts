@@ -1,5 +1,5 @@
 import { readInFile } from '../filereader.ts';
-import { getPriority } from './utils';
+import { getPriority } from './utils.ts';
 // a = 1, b = ....
 // A = 27, B = ....
 
