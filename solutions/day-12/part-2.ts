@@ -118,8 +118,6 @@ readInFile('./inputs/day-12/input.dat', (data) => {
 
 	const network = generateNetwork(grid);
 
-	let endFound = false;
-
 	const starts = VALID_STARTS.map(vs => traceRoute(vs, network)).filter(vs => vs != -1).sort((a, b) => a - b);
 
 	console.log(starts);
