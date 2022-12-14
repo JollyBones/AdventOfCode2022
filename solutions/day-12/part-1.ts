@@ -1,132 +1,116 @@
 import { readInFile } from '../filereader.ts';
 
 type Point = {
-	x: number;
-	y: number;
+	x: number,
+	y: number,
 };
-let MAX_X = -1;
-let MAX_Y = 1;
-let grid: string[][] = [];
 
-const getStartAndEndPoints = (grid: string[][]): Point[] => {
-	let start: Point | undefined = undefined;
-	let end: Point | undefined = undefined;
+type Node = {
+	height: string,
+	point: string,
+	neighbours: Point[],
+	distance: number,
+}
 
-	points: for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
-		if (start && end) {
-			break points;
-		}
-		const row = grid[rowIndex];
-		const startIndex = row.findIndex(cell => cell === 'S');
-		const endIndex = row.findIndex(cell => cell === 'E');
+let MAX_HEIGHT = -1;
+let MAX_WIDTH = -1;
+let START_POINT: Point = { x: -1, y: -1 };
 
-		if (startIndex > -1) {
-			start = {
-				x: startIndex,
-				y: rowIndex
+function isValidPoint(point: Point): boolean {
+	return !(point.x < 0 || point.y < 0) && !(point.x > MAX_WIDTH || point.y > MAX_HEIGHT);
+}
+
+function sanitiseHeight(cell: number): number {
+	if (cell === 83) return 97;
+	if (cell === 69) return 122;
+	return cell;
+}
+
+function isSafeHeight(start: string, end: string): boolean {
+	const startHeight = sanitiseHeight(start.charCodeAt(0));
+	const endHeight = sanitiseHeight(end.charCodeAt(0));
+
+	return endHeight - startHeight < 2;
+}
+
+function generateNetwork(grid: string[][]): Node[][] {
+	return grid.map((row, y) => {
+		return row.map((cell, x) => {
+			if (cell === 'S') {
+				START_POINT = { x, y };
 			}
-		}
-		if (endIndex > -1) {
-			end = {
-				x: endIndex,
-				y: rowIndex
+			const neighbours: Point[] = [
+				{
+					x: x + 1,
+					y,
+				},
+				{
+					x: x - 1,
+					y,
+				},
+				{
+					x,
+					y: y + 1,
+				},
+				{
+					x,
+					y: y - 1
+				}
+			];
+
+			const validNeighbours = neighbours.filter(point => {
+				return isValidPoint(point) && isSafeHeight(cell, grid[point.y][point.x]);
+			});
+
+			return {
+				height: cell,
+				point: `${x},${y}`,
+				neighbours: validNeighbours,
+				distance: Number.MAX_SAFE_INTEGER,
 			}
-		}
-	}
-	return [start!, end!];
-}
-
-const isSamePoint = (a: Point, b: Point) => a.x === b.x && a.y === b.y;
-
-const getValidSteps = (curr: Point, pastPoints: Point[]) => {
-	const baseSteps = [
-		{
-			...curr,
-			x: curr.x - 1
-		},
-		{
-			...curr,
-			x: curr.x + 1
-		},
-		{
-			...curr,
-			y: curr.y - 1,
-		},
-		{
-			...curr,
-			y: curr.y + 1,
-		}
-	];
-
-	return baseSteps
-		.filter(step => !(step.x < 0 || step.y < 0) && !(step.x > MAX_X || step.y > MAX_Y))
-		.filter(step => !pastPoints.find(p => isSamePoint(step, p)));
-}
-
-const sanitiseStep = (code: number): number => {
-	if (code === 83) return 97;
-	if (code === 69) return 122;
-	return code;
-}
-
-const getDistance = (a: Point, b: Point) => Math.sqrt(Math.abs(b.y - a.y) + Math.abs(b.x - a.x));
-
-const getPreferredSteps = (steps: Point[], target: Point, currDistance: number): Point[] => {
-	const ideal = steps.filter(step => {
-		return getDistance(step, target) <= currDistance
+		});
 	});
-
-	return ideal.length > 0 ? ideal : steps;
-}
-
-const isSafeStep = (curr: Point, target: Point): boolean => {
-	const currHeight = sanitiseStep(grid[curr.y][curr.x].charCodeAt(0));
-	const targetHeight = sanitiseStep(grid[target.y][target.x].charCodeAt(0));
-
-	return Math.abs(currHeight - targetHeight) < 2;
-};
-
-const findPaths = (
-	start: Point,
-	end: Point,
-	pastPoints: Point[] = [],
-	stepCount = 0,
-): number[] => {
-	if (isSamePoint(start, end)) {
-		console.log(`Found valid path in ${stepCount} steps`);
-		return [stepCount];
-	}
-
-	const currDistance = getDistance(start, end);
-	const validSteps = getValidSteps(start, pastPoints);
-	const preferredSteps = getPreferredSteps(validSteps, end, currDistance);
-	const nonPreferredSteps = validSteps.filter(vs => !preferredSteps.includes(vs));
-
-	const firstDistances = preferredSteps.map(step => {
-		if (isSafeStep(start, step)) {
-			return findPaths(step, end, [...pastPoints, start], stepCount + 1)
-		}
-		return [];
-	}).flatMap(a => a, []);
-	return firstDistances.length === 0 ? nonPreferredSteps.map(step => {
-		if (isSafeStep(start, step)) {
-			return findPaths(step, end, [...pastPoints, start], stepCount + 1)
-		}
-		return []
-	}).flatMap(a => a) : firstDistances;
 }
 
 readInFile('./inputs/day-12/input.dat', (data) => {
 	// Set globals;
-	grid = data.split("\n").map(d => d.split(""));
-	MAX_X = grid[0].length - 1;
-	MAX_Y = grid.length - 1;
+	const rows = data.split("\n");
+	const grid = rows.map(row => row.split(''));
+	MAX_HEIGHT = grid.length - 1;
+	MAX_WIDTH = grid[0]!.length - 1;
 
-	// Get starts and ends
-	const [start, end] = getStartAndEndPoints(grid);
+	const network = generateNetwork(grid);
+	const queue: Node[] = [];
+	const distances: Map<string, number> = new Map();
 
-	// Get paths
-	const paths = findPaths(start, end);
+	distances.set(`${START_POINT.x},${START_POINT.y}`, 0);
+	queue.push(network[START_POINT.y][START_POINT.x]);
 
-	console.log(paths.sort());
+	let endFound = false;
+
+	runtime: while (queue.length > 0) {
+		const node = queue.shift()!;
+		const distance = distances.get(node.point)!;
+
+		if (endFound) {
+			break runtime;
+		}
+
+		node.neighbours.forEach(n => {
+			const cellName = `${n.x},${n.y}`;
+			if (!distances.get(cellName)) {
+				const point = network[n.y][n.x];
+				distances.set(cellName, distance + 1);
+				if (point.height === 'E') {
+					console.log('Found shortest distance ' + (distance + 1));
+					endFound = true;
+				}
+				queue.push(point);
+			}
+		});
+	}
+
+	console.log(distances);
+	// Use a priority queue Dijsktra algorithm
+	// https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
 });
