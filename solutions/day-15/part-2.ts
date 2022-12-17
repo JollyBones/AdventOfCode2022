@@ -34,7 +34,7 @@ function checkImpossibleLocations(sensors: Map<string, number>, searchSize: numb
 readInFile('./inputs/day-15/input.dat', (data) => {
 	const inputs = data.split('\n');
 	const distances = new Map<string, number>();
-	const searchSize = 400_000;
+	const searchSize = 4_000_000;
 
 	inputs.forEach(input => {
 		const [senX, senY, beaX, beaY] = input.match(/[-\d]+/g)!.map(value => Number(value));
