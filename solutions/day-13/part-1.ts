@@ -1,114 +1,39 @@
 import { readInFile } from '../filereader.ts';
 
-const SKIP_REGEX = /([,\]])/g;
+type DeepArray = number | number[] | DeepArray[];
 
-function isRightOrder(leftString: string, rightString: string): boolean {
-	const [ left, right ] = [
-		leftString.charAt(0),
-		rightString.charAt(0),
-	];
+function compare(left: DeepArray, right: DeepArray): number {
+	if (Number.isFinite(left) && Number.isFinite(right)) {
+		if (left > right) return -1;
+		if (left < right) return 1;
+	} else if (Number.isFinite(left)) return compare([left], right);
+	else if (Number.isFinite(right)) return compare(left, [right]);
+	else {
+		if (!left) return 1;
+		if (!right) return -1;
+		const leftArr = left as number[];
+		const rightArr = right as number[];
 
-	// Same character? Move on.
-	if (left === right) {
-		return isRightOrder(
-			leftString.substring(1),
-			rightString.substring(1)
-		);
+		const maxLength = Math.max(leftArr.length, rightArr.length);
+		for (let ii = 0; ii < maxLength; ii++) {
+			const comp = compare(leftArr[ii], rightArr[ii]);
+			if (comp !== 0) return comp;
+		}
+
+		if (leftArr.length < rightArr.length) return 1;
+		if (leftArr.length > rightArr.length) return -1;
 	}
-
-	// Compare numbers first
-	const leftNumber = Number(left);
-	const rightNumber = Number(right);
-
-	if (!isNaN(leftNumber) && !isNaN(rightNumber)) {
-		if (leftNumber === rightNumber) {
-			return isRightOrder(
-				leftString.substring(1),
-				rightString.substring(1)
-			)
-		}
-		return leftNumber < rightNumber;
-	}
-
-	// Check different list starts
-	if (left === "[") {
-		if (right === "]") {
-			return false;
-		}
-
-		// Left list ran out first.
-		if (right === ",") {
-			return true;
-		}
-
-		if (!isNaN(rightNumber)) {
-			const newRight = right + "]" + rightString.substring(1);
-			return isRightOrder(
-				leftString.substring(1),
-				newRight,
-			);
-		}
-	}
-
-	if (right === "[") {
-		if (left === "]") {
-			return true;
-		}
-
-		// Right list ran out first.
-		if (left === ",") {
-			return false;
-		}
-		
-		if (!isNaN(leftNumber)) {
-			const newLeft = left + "]" + leftString.substring(1);
-			return isRightOrder(
-				newLeft,
-				rightString.substring(1),
-			);
-		}
-	}
-
-	if (left === ',') {
-		if (right === ']') {
-			return false;
-		}
-	}
-
-	if (right === ',') {
-		if (left === ']') {
-			return true;
-		}
-	}
-
-	if (left === ']') {
-		if (!isNaN(rightNumber)) {
-			return true;
-		}
-	}
-
-	if (right === ']') {
-		if (!isNaN(leftNumber)) {
-			return false;
-		}
-	}
-
-	throw Error(`Unable to match pairs ${left}, ${right}`);
+	return 0;
 }
 
 readInFile('./inputs/day-13/input.dat', (data) => {
 	const pairs = data.split("\n\n");
 	const rightOrder: number[] = [];
 	pairs.forEach((pair, index) => {
-		const [left, right] = pair.split("\n");
-		const res = isRightOrder(left, right);
-
-		console.log(left, right, index + 1, res);
-
-		if (res) {
-			rightOrder.push(index + 1);
-		}
+		const [left, right] = pair.split("\n").map(pair => JSON.parse(pair));
+		const comp = compare(left, right);
+		if (comp > 0) rightOrder.push(index + 1);
 	});
 
-	console.log(`Right indices: ${rightOrder}: ${rightOrder.reduce((a, b) => a + b, 0)}`);
+	console.log(`Correct indices: ${rightOrder}: ${rightOrder.reduce((a, b) => a + b, 0)}`);
 });
