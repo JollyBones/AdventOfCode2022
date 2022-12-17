@@ -2,8 +2,6 @@ import { readInFile } from '../filereader.ts';
 
 let minX = Number.POSITIVE_INFINITY, maxX = Number.NEGATIVE_INFINITY, maxY = Number.NEGATIVE_INFINITY;
 
-const TAKEN_POINTS = ["#", "O"];
-
 function createGrid(paths: string[]): Map<string, string> {
 	const grid = new Map<string, string>();
 	paths.forEach(path => {
@@ -40,15 +38,6 @@ function createGrid(paths: string[]): Map<string, string> {
 	return grid;
 }
 
-function printGrid(grid: Map<string, string>): void {
-	for (let ii = 0; ii <= maxY; ii++) {
-		let outString = "";
-		for (let jj = minX; jj <= maxX; jj++) {
-			outString += grid.get(`${jj},${ii}`) ?? ".";
-		}
-		console.log(outString);
-	}
-}
 
 function dropSand(x: number, y: number, grid: Map<string, string>): string {
 	if (x < minX || y > maxX || y > maxY) return "OVERFLOWING";
@@ -57,7 +46,7 @@ function dropSand(x: number, y: number, grid: Map<string, string>): string {
 	if (!grid.get(`${x-1},${y+1}`)) return dropSand(x-1, y+1, grid);
 	if (!grid.get(`${x+1},${y+1}`)) return	dropSand(x+1, y+1, grid);
 	return `${x},${y}`;
-};
+}
 
 function calculateTotalSand(grid: Map<string, string>): number {
 	let count = 0;
@@ -69,7 +58,7 @@ function calculateTotalSand(grid: Map<string, string>): number {
 		}
 		grid.set(point, "O");
 		count++;
-	};
+	}
 
 	return count;
 }
